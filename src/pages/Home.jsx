@@ -1,21 +1,19 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { 
-  Smartphone, Shirt, Monitor, Star, MapPin, Grid, 
-  Phone, Zap, ChevronRight, ChevronLeft 
+import {
+  Smartphone, Shirt, Monitor, Star, MapPin, Grid,
+  Phone, Zap, ChevronRight, ChevronLeft
 } from 'lucide-react';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
-import 'react-lazy-load-image-component/src/effects/blur.css';  
+import 'react-lazy-load-image-component/src/effects/blur.css';
 import api from '../services/api';
-// Import Store Global
 import useProductStore from '../stores/useProductStore';
 
 export default function Home() {
-  // Ambil state dari Zustand Store
-  const { 
-    products, setProducts, addProducts, 
-    page, setPage, 
-    hasMore, setHasMore 
+  const {
+    products, setProducts, addProducts,
+    page, setPage,
+    hasMore, setHasMore
   } = useProductStore();
 
   const [loading, setLoading] = useState(false);
@@ -24,32 +22,29 @@ export default function Home() {
   const searchQuery = searchParams.get('search');
   const limit = 24;
 
-  // FUNGSI UTAMA: Ambil data nyata dari Backend
   const fetchProducts = async (pageNum, isNewSearch = false) => {
     if (isNewSearch) setLoading(true);
     else setLoadingMore(true);
 
     try {
       const response = await api.get('/products', {
-        params: { 
+        params: {
           search: searchQuery,
           page: pageNum,
           limit: limit
         }
       });
-      
+
       const productData = response.data.data ? response.data.data : response.data;
-      
+
       if (isNewSearch) {
         setProducts(productData);
       } else {
-        // ANTI-DUPLIKAT: Menyaring data agar tidak ada ID yang sama
         const existingIds = new Set(products.map(p => p.id));
         const uniqueNewData = productData.filter(p => !existingIds.has(p.id));
         addProducts(uniqueNewData);
       }
 
-      // Sembunyikan tombol jika data habis
       if (productData.length < limit) {
         setHasMore(false);
       } else {
@@ -64,13 +59,11 @@ export default function Home() {
     }
   };
 
-  // LOGIKA ANTI-REFRESH: Hanya fetch jika data kosong atau sedang mencari
   useEffect(() => {
     if (products.length === 0 || searchQuery) {
       setPage(1);
       fetchProducts(1, true);
     }
-    // Jika products.length > 0 dan tidak ada pencarian baru, fetch ditunda (data diambil dari cache)
   }, [searchQuery]);
 
   const handleLoadMore = () => {
@@ -79,7 +72,6 @@ export default function Home() {
     fetchProducts(nextPage, false);
   };
 
-  // State Banner lokal (tetap seperti semula)
   const [currentSlide, setCurrentSlide] = useState(0);
   const banners = [
     { id: 1, color: 'bg-purple-600', text: 'Malas belanja ke mal?', sub: 'Coba Official Store, jaminan pasti ori!' },
@@ -98,13 +90,12 @@ export default function Home() {
 
   return (
     <div className="pt-28 pb-16 px-4 md:px-8 max-w-[1200px] mx-auto">
-      
+
       {!searchQuery && (
         <>
-          {/* Banner Carousel */}
           <section className="relative group overflow-hidden rounded-2xl h-[200px] md:h-[300px] mb-8 shadow-sm">
-            <div 
-              className="flex h-full transition-transform duration-700 ease-in-out" 
+            <div
+              className="flex h-full transition-transform duration-700 ease-in-out"
               style={{ transform: `translateX(-${currentSlide * 100}%)` }}
             >
               {banners.map((b) => (
@@ -123,7 +114,6 @@ export default function Home() {
             <button onClick={() => setCurrentSlide(s => (s + 1) % banners.length)} className="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-white/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white z-20"><ChevronRight className="text-gray-800" /></button>
           </section>
 
-          {/* Widget Kategori */}
           <div className="mb-8 bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
             <h3 className="text-lg font-bold text-gray-800 mb-6">Kategori Populer</h3>
             <div className="flex flex-wrap gap-3">
@@ -138,7 +128,6 @@ export default function Home() {
         </>
       )}
 
-      {/* Grid Produk Utama */}
       <div className="mb-6 flex justify-between items-center">
         <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
           <span className="w-1.5 h-6 bg-green-500 rounded-full inline-block"></span>

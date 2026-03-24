@@ -4,11 +4,9 @@ export default function Footer() {
   return (
     <footer className="bg-white border-t border-gray-200 pt-12 pb-6 mt-10">
       <div className="max-w-[1200px] mx-auto px-4">
-        
-        {/* --- BAGIAN ATAS: GRID MENU & INFO --- */}
+      
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-12">
           
-          {/* Kolom 1: Tokopedia (MarketKu) */}
           <div className="space-y-4">
             <h4 className="font-bold text-gray-800 text-base">MarketKu</h4>
             <ul className="text-sm text-gray-500 space-y-2">
@@ -21,7 +19,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Kolom 2: Beli & Jual */}
           <div className="space-y-6">
             <div>
               <h4 className="font-bold text-gray-800 text-base mb-3">Beli</h4>
@@ -40,7 +37,6 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Kolom 3: Bantuan */}
           <div className="space-y-4">
             <h4 className="font-bold text-gray-800 text-base">Bantuan dan Panduan</h4>
             <ul className="text-sm text-gray-500 space-y-2">
@@ -50,7 +46,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Kolom 4: Keamanan & Sosial */}
           <div className="space-y-8">
             <div>
               <h4 className="font-bold text-gray-800 text-base mb-4">Keamanan & Privasi</h4>
@@ -72,7 +67,6 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Kolom 5: Promo Aplikasi (Banner Kanan) */}
           <div className="lg:col-span-1 space-y-4">
             <h4 className="font-bold text-gray-800 text-base">Nikmatin keuntungan spesial di aplikasi:</h4>
             <div className="space-y-2">
@@ -98,7 +92,6 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* --- BAGIAN BAWAH: COPYRIGHT & LANGUAGE --- */}
         <div className="border-t border-gray-100 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
            <p className="text-sm text-gray-400">© 2009 - 2026, PT. MarketKu. All Rights Reserved.</p>
            <div className="flex items-center gap-1">
@@ -112,7 +105,6 @@ export default function Footer() {
   );
 }
 
-// Sub-komponen untuk list keuntungan
 function BenefitItem({ icon, text }) {
   return (
     <div className="flex items-center gap-2">

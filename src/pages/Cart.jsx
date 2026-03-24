@@ -1,34 +1,30 @@
 import { useState } from 'react';
 import { Trash2, Minus, Plus, Ticket, Store, Wallet, Check, ShoppingBag, X, Heart } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate untuk navigasi
+import { Link, useNavigate } from 'react-router-dom';
 import useCartStore from '../stores/useCartStore';
 
 export default function Cart() {
-  const navigate = useNavigate(); // Inisialisasi navigasi
+  const navigate = useNavigate();
   const { cartItems, updateQty, removeItem, promo, applyPromo, removePromo } = useCartStore();
-  const [selectedItems, setSelectedItems] = useState([]); 
+  const [selectedItems, setSelectedItems] = useState([]);
   const [promoInput, setPromoInput] = useState('');
 
-  // Fungsi untuk memilih/centang produk individual
   const handleSelectItem = (id) => {
     setSelectedItems(prev => prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]);
   };
 
-  // Fungsi untuk memilih semua produk sekaligus
   const handleSelectAll = () => {
     if (selectedItems.length === cartItems.length) {
-      setSelectedItems([]); 
+      setSelectedItems([]);
     } else {
-      setSelectedItems(cartItems.map(item => item.id)); 
+      setSelectedItems(cartItems.map(item => item.id));
     }
   };
 
-  // Fungsi navigasi ke halaman checkout
   const handleCheckout = () => {
     navigate('/checkout');
   };
 
-  // Perhitungan harga berdasarkan barang yang dipilih
   const subtotal = cartItems
     .filter(item => selectedItems.includes(item.id))
     .reduce((total, item) => total + (item.price * item.qty), 0);
@@ -36,7 +32,6 @@ export default function Cart() {
   const discountNominal = (promo && promo.isActive) ? (subtotal * promo.discount) : 0;
   const totalHarga = subtotal - discountNominal;
 
-  // Fungsi untuk memverifikasi voucher
   const handleApplyVoucher = () => {
     if (promoInput.toUpperCase() === "GABUTHEMAT") {
       applyPromo("GABUTHEMAT");
@@ -45,7 +40,6 @@ export default function Cart() {
     }
   };
 
-  // Tampilan jika keranjang benar-benar kosong
   if (cartItems.length === 0) {
     return (
       <div className="pt-40 pb-20 flex flex-col items-center justify-center min-h-[60vh]">
@@ -61,12 +55,11 @@ export default function Cart() {
   return (
     <div className="max-w-[1200px] mx-auto pt-28 pb-16 px-4 animate-in fade-in duration-300">
       <h1 className="text-xl font-bold text-gray-800 mb-6">Keranjang</h1>
-      
+
       <div className="flex flex-col lg:flex-row gap-8 items-start">
-        
-        {/* KOLOM KIRI: DAFTAR BARANG */}
+
         <div className="w-full lg:flex-1 space-y-6">
-          
+
           <div className="bg-white p-4 rounded-lg border border-gray-200 flex items-center justify-between shadow-sm">
             <label className="flex items-center gap-4 cursor-pointer text-sm font-medium text-gray-600">
               <input type="checkbox" className="w-5 h-5 accent-green-500 rounded border-gray-300"
@@ -95,9 +88,9 @@ export default function Cart() {
                     checked={selectedItems.includes(item.id)}
                     onChange={() => handleSelectItem(item.id)} />
                 </div>
-                
+
                 <img src={item.image} alt={item.name} className="w-20 h-20 object-cover rounded-lg border border-gray-100 shrink-0" />
-                
+
                 <div className="flex-1 flex flex-col justify-between min-w-0">
                   <div className="flex justify-between items-start gap-4">
                     <h3 className="text-sm text-gray-800 line-clamp-2 pr-4 flex-1">{item.name}</h3>
@@ -108,13 +101,13 @@ export default function Cart() {
 
                   <div className="flex items-center justify-between mt-4">
                     <button className="text-[12px] text-green-500 font-bold hover:underline">Tulis Catatan</button>
-                    
+
                     <div className="flex items-center gap-6">
                       <div className="flex items-center gap-4 text-gray-300">
-                         <button className="hover:text-red-500 transition-colors"><Heart size={20} /></button>
-                         <button onClick={() => removeItem(item.id)} className="hover:text-red-500 transition-colors">
-                           <Trash2 size={20} />
-                         </button>
+                        <button className="hover:text-red-500 transition-colors"><Heart size={20} /></button>
+                        <button onClick={() => removeItem(item.id)} className="hover:text-red-500 transition-colors">
+                          <Trash2 size={20} />
+                        </button>
                       </div>
 
                       <div className="flex items-center border border-gray-300 rounded-lg h-8 overflow-hidden bg-white">
@@ -134,15 +127,14 @@ export default function Cart() {
           ))}
         </div>
 
-        {/* KOLOM KANAN: RINGKASAN BELANJA */}
         <div className="w-full lg:w-[350px] lg:sticky lg:top-28">
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5 space-y-4">
-            
+
             <div className="border-b border-gray-100 pb-4">
               <p className="text-xs font-bold text-gray-500 mb-2 uppercase tracking-wide">Kupon & Promo</p>
               {!promo.isActive ? (
                 <div className="flex gap-2">
-                  <input type="text" placeholder="Masukkan kode promo" 
+                  <input type="text" placeholder="Masukkan kode promo"
                     className="flex-1 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-xs font-bold uppercase outline-none focus:border-green-500 transition-all"
                     value={promoInput} onChange={(e) => setPromoInput(e.target.value)} />
                   <button onClick={handleApplyVoucher} className="bg-green-500 text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-green-600 transition-colors">PAKAI</button>
@@ -177,8 +169,7 @@ export default function Cart() {
               <span className="font-bold text-lg text-gray-900">Rp{totalHarga.toLocaleString('id-ID')}</span>
             </div>
 
-            {/* UPGRADE: Penambahan fungsi onClick handleCheckout */}
-            <button 
+            <button
               disabled={selectedItems.length === 0}
               onClick={handleCheckout}
               className="w-full bg-green-500 text-white font-bold h-11 rounded-lg shadow-md hover:bg-green-600 transition-all disabled:bg-gray-200 disabled:shadow-none disabled:cursor-not-allowed"

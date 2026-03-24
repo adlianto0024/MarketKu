@@ -1,11 +1,8 @@
 import { useState } from 'react';
-import { 
+import {
   CheckCircle2, LogOut, ChevronDown
 } from 'lucide-react';
-
-// 1. IMPORT STORE AUTH
 import useAuthStore from '../stores/useAuthStore';
-
 import BiodataTab from './tab/biodata';
 import AlamatTab from './tab/tambahAlamat';
 import PembayaranTab from './tab/pembayaran';
@@ -15,22 +12,18 @@ import TampilanTab from './tab/personalisasi';
 import KeamananTab from './tab/keamanan';
 
 export default function Account() {
-  // --- FUNGSI PERSISTENSI TAB ---
-  // Kita inisialisasi state dengan mengecek localStorage terlebih dahulu
   const [activeTab, setActiveTab] = useState(() => {
     const savedTab = localStorage.getItem('active_account_tab');
-    return savedTab || 'biodatadiri'; // Jika kosong, default ke 'biodatadiri'
+    return savedTab || 'biodatadiri';
   });
 
-  // Fungsi pembungkus untuk mengubah tab sekaligus menyimpan ke localStorage
   const handleTabChange = (tabId) => {
     setActiveTab(tabId);
     localStorage.setItem('active_account_tab', tabId);
   };
 
-  // 2. AMBIL DATA USER DAN FUNGSI LOGOUT DARI STORE
   const { user, logout } = useAuthStore();
-  
+
   const renderTab = () => {
     switch (activeTab) {
       case 'biodatadiri': return <BiodataTab />;
@@ -57,70 +50,70 @@ export default function Account() {
   return (
     <div className="min-h-screen bg-white text-gray-800 pt-28 pb-20 px-4">
       <div className="max-w-[1400px] mx-auto flex flex-col lg:flex-row gap-8">
-        
-        {/* ================= SIDEBAR ================= */}
+
+        {/* side bar */}
         <aside className="w-full lg:w-[280px] shrink-0 space-y-6">
-          
-          {/* CARD USER */}
+
+          {/* card user*/}
           <div className="p-4 border border-gray-200 rounded-xl shadow-sm flex items-center gap-3">
             <img src={user?.image} className="w-10 h-10 rounded-full object-cover" alt="avatar" />
             <div className="overflow-hidden">
-                <p className="font-bold text-sm truncate">{user?.name || 'Bell'}</p>
-                <div className="flex items-center gap-1 text-[10px] text-green-500 font-bold uppercase tracking-tighter">
-                    <CheckCircle2 size={10} /> Terverifikasi
-                </div>
+              <p className="font-bold text-sm truncate">{user?.name || 'Bell'}</p>
+              <div className="flex items-center gap-1 text-[10px] text-green-500 font-bold uppercase tracking-tighter">
+                <CheckCircle2 size={10} /> Terverifikasi
+              </div>
             </div>
           </div>
 
-          {/* PLUS CARD */}
+          {/* card */}
           <div className="p-4 border border-gray-200 rounded-xl shadow-sm bg-gradient-to-r from-green-50 to-white">
             <div className="bg-green-600 text-white text-[10px] font-black w-fit px-1.5 py-0.5 rounded mb-2 uppercase">Plus</div>
             <p className="text-[11px] font-bold text-gray-800 leading-tight">Nikmati Gratis Ongkir tanpa batas!</p>
             <p className="text-[10px] text-gray-500 mt-1">Min. belanja Rp0, bebas biaya aplikasi~</p>
           </div>
 
-          {/* WALLET SECTION */}
+          {/* wallet */}
           <div className="py-2 border-b border-gray-100 space-y-1">
             <SidebarWallet icon="https://p7.hiclipart.com/preview/411/493/941/logo-gopay-application-software-indonesia-money-wallet-indonesia.jpg" label="GoPay" value="Aktifkan" isLink />
             <SidebarWallet icon="https://static.republika.co.id/uploads/images/inpicture_slide/tokopedia-card_220603171309-847.jpg" label="Dana" value="Daftar" isLink />
             <SidebarWallet icon="https://cdn-icons-png.flaticon.com/512/2331/2331941.png" label="Saldo" value="Rp0" />
           </div>
 
-          {/* NAVIGASI */}
+          {/* navigasi */}
           <nav className="space-y-4 pt-2 px-1">
             <SidebarNavSection title="Kotak Masuk" items={[
-              { label: 'Chat', count: 2 }, 
-              { label: 'Ulasan' }, 
+              { label: 'Chat', count: 2 },
+              { label: 'Ulasan' },
               { label: 'Pesan Bantuan' },
               { label: 'Pesanan Dikomplain' },
               { label: 'Update' }
             ]} />
-            
+
             <SidebarNavSection title="Pembelian" items={[
-              { label: 'Menunggu Pembayaran' }, 
+              { label: 'Menunggu Pembayaran' },
               { label: 'Daftar Transaksi' }
             ]} />
-            
+
             <SidebarNavSection title="Profil Saya" items={[
-              { label: 'Wishlist' }, 
+              { label: 'Wishlist' },
               { label: 'Toko Favorit' },
               { label: 'Pengaturan', active: true }
             ]} />
-            
-            <button 
-                onClick={logout}
-                className="flex items-center gap-2 text-xs font-bold text-red-500 hover:text-red-600 pl-2 pt-6 w-full text-left"
+
+            <button
+              onClick={logout}
+              className="flex items-center gap-2 text-xs font-bold text-red-500 hover:text-red-600 pl-2 pt-6 w-full text-left"
             >
               <LogOut size={14} /> Keluar Akun
             </button>
           </nav>
         </aside>
 
-        {/* ================= MAIN CONTENT ================= */}
+        {/* main content*/}
         <main className="flex-1 border border-gray-200 rounded-2xl p-6 lg:p-8 shadow-sm h-fit">
           <div className="flex gap-8 border-b border-gray-100 mb-8 overflow-x-auto scrollbar-hide">
             {tabs.map(tab => (
-              <button key={tab.id} onClick={() => handleTabChange(tab.id)} 
+              <button key={tab.id} onClick={() => handleTabChange(tab.id)}
                 className={`pb-3 text-sm font-bold whitespace-nowrap transition-all border-b-2 ${activeTab === tab.id ? 'text-green-500 border-green-500' : 'text-gray-400 border-transparent hover:text-gray-600'}`}>
                 {tab.label}
               </button>
@@ -135,8 +128,6 @@ export default function Account() {
     </div>
   );
 }
-
-// ================= KOMPONEN PENDUKUNG =================
 
 function SidebarNavSection({ title, items }) {
   return (

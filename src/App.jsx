@@ -23,8 +23,7 @@ function App() {
     <Router>
       <div className="min-h-screen bg-gray-50 flex flex-col">
         <Navbar />
-        
-        {/* Main Content dengan Flex-Grow agar footer tetap di bawah jika konten sedikit */}
+
         <main className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />
