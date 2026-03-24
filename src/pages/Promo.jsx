@@ -1,0 +1,1 @@
+export default function Promo() { return <div className="p-8 text-xl">Halaman Promo</div>; }
